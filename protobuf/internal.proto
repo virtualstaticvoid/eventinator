@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package eventinator.protobuf;
+
+option go_package = "protobuf";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
+
+import "api.proto";
+
+// represents a message with generic protobuf payload
+// this is an internal type used for storing messages
+// i.e. messages on the backend are stored in this form
+message Event {
+
+  // unique UUID
+  // e.g. "123e4567-e89b-12d3-a456-426655440000"
+  string id = 1;
+
+  // version
+  // e.g. "1.0"
+  string version = 2;
+
+  // context of the message; either system or tenant
+  oneof context {
+    SystemContext system_context = 3;
+    TenantContext tenant_context = 4;
+  }
+
+  // source/origin urn
+  // e.g. "urn:system-x.org.com/service-a"
+  string source = 5;
+
+  // protocol buffer for the message payload
+  // the "any" message embeds the message type via `type_url` and the data as byte[]
+  google.protobuf.Any payload = 6;
+
+  // correlation id for distributed tracing and tracking
+  string correlation_id = 7;
+
+  // metadata for message, used for communicating contextual information
+  map<string, string> meta_data = 8;
+
+  // the MIME type of the data
+  //
+  // this will be derived from the provided payload, taking the form
+  //
+  //    'application/x-protobuf; messageType="x.y.Z"'
+  //
+  // where the messageType is the protobuf message type (corresponds with Any#type_url)
+  //
+  // see https://tools.ietf.org/html/draft-rfernando-protocol-buffers-00
+  // https://www.charlesproxy.com/documentation/using-charles/protocol-buffers/
+  // and https://prometheus.io/docs/instrumenting/exposition_formats/
+  //
+  string content_type = 9;
+
+  // UTC time the message was created
+  google.protobuf.Timestamp created_at = 10;
+
+}

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package eventinator.protobuf;
+
+option go_package = "protobuf";
+
+import "google/protobuf/descriptor.proto";
+
+// define options extension for messages
+extend google.protobuf.MessageOptions {
+
+  // the topic on which message are published
+  // so that subscribers can specify which messages they are interested in
+  string topic = 74000;
+
+  // the version of the message
+  // so that a consuming client can differentiate
+  string version = 74001;
+
+}

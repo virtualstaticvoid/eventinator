@@ -1,0 +1,24 @@
+---
+version: "3"
+
+services:
+
+  nats:
+    image: nats-streaming:0.9.2-linux
+    command: -a 0.0.0.0 -p 4222 -m 8222 -m 8282 -c /etc/nats/nats.conf -sc /etc/nats/stan.conf -SDV
+    volumes:
+      - "./nats.conf:/etc/nats/nats.conf"
+      - "./stan.conf:/etc/nats/stan.conf"
+      - "./certs:/etc/nats/certs"
+
+  server:
+    build: .
+    image: vsv/eventinator:latest
+    command: -server nats://nats:4222 -verbose -metricsEnabled
+    ports:
+      - "5300:5300"
+      - "9000:9000"
+    links:
+      - nats
+    depends_on:
+      - nats

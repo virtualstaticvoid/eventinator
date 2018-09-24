@@ -1,0 +1,74 @@
+#!/bin/bash
+
+set -e
+
+filename=${1:-client-cert}
+reqconf=${2:-client-cert-req.conf}
+cafilename=${3:-ca}
+
+# ensure the CA certificates are in place
+if [ ! -f "$cafilename.crt" ]; then
+  echo -e "\nERROR:\n  The CA Certificate ($cafilename.crt) Public Key file is missing.\n  Obtain the relevant certificate before running\n"
+  exit 1
+fi
+
+if [ ! -f "$cafilename.key" ]; then
+  echo -e "\nERROR:\n  The CA Certificate ($cafilename.key) Private Key file is missing.\n  Obtain the relevant certificate before running\n"
+  exit 1
+fi
+
+if [ ! -f password ]; then
+  echo -e "\nERROR:\n  The CA Certificate (password) Password file is missing.\n  Create the file with the CA Certificate password before running\n"
+  exit 1
+fi
+
+##
+# https://www.openssl.org/docs/apps/genrsa.html
+
+openssl genrsa -aes256 -passout file:password -out "$filename.key" 2048
+
+# save unencrypted... (this would be part of deploy)
+openssl rsa -in "$filename.key" -passin file:password -out $filename.pem
+
+##
+# https://www.openssl.org/docs/apps/req.html
+
+openssl req -config $reqconf \
+            -new \
+            -key "$filename.key" -sha256 \
+            -passin file:password \
+            -out "$filename.csr"
+
+##
+# https://www.openssl.org/docs/apps/x509.html
+
+openssl x509 -req \
+             -days 10000 \
+             -in "$filename.csr" \
+             -CA "$cafilename.crt" -CAkey "$cafilename.key" \
+             -passin file:password \
+             -set_serial 01 -sha256 \
+             -out "$filename.crt"
+
+openssl x509 -in "$filename.crt" \
+             -text \
+             -noout > $filename.txt
+
+echo "Wrote $filename.crt"
+
+##
+# https://www.openssl.org/docs/apps/pkcs12.html
+
+# create a copy of the password, since the same file cannot be used for both in and out
+cp password password2 > /dev/null
+
+openssl pkcs12 -export -in "$filename.crt" \
+               -inkey "$filename.key" \
+               -CSP "Microsoft Enhanced RSA and AES Cryptographic Provider" \
+               -passin file:password \
+               -passout file:password2 \
+               -out $filename.pfx
+
+rm password2 > /dev/null
+
+exit 0

@@ -1,0 +1,39 @@
+#!/bin/bash
+
+set -e
+
+filename=${1:-ca}
+
+# ensure the CA certificates are not in place; don't want to overwrite!
+if [ -f "$filename.crt" ]; then
+  echo -e "\nERROR:\n  The CA Certificate ($filename.crt) exists already.\n"
+  exit 1
+fi
+
+if [ -f "$filename.key" ]; then
+  echo -e "\nERROR:\n  The CA Certificate ($filename.key) exists already.\n"
+  exit 1
+fi
+
+# need a password file
+if [ ! -f password ]; then
+  echo -e "\nERROR:\n  The CA Certificate (password) Password file is missing.\n  Create the file with the CA Certificate password before running.\n"
+  exit 1
+fi
+
+# generate the CA private key
+openssl genrsa -des3 \
+               -passout file:password \
+               -out "$filename.key" 4096
+
+# generate the root certificate
+openssl req -config ca-req.conf \
+            -passin file:password \
+				    -new \
+				    -x509 \
+				    -key "$filename.key" \
+				    -out "$filename.crt" \
+				    -days 10000 \
+				    -set_serial 0
+
+exit 0

@@ -1,0 +1,8 @@
+*.crt
+*.crt
+*.csr
+*.key
+*.pem
+*.pfx
+*.txt
+password
