@@ -10,10 +10,10 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/google/uuid"
 	"github.com/nats-io/go-nats-streaming"
-	"vsv.io/eventinator/metrics"
+	"go.virtualstaticvoid.com/eventinator/metrics"
 
 	log "github.com/sirupsen/logrus"
-	pb "vsv.io/eventinator/protobuf"
+	pb "go.virtualstaticvoid.com/eventinator/protobuf"
 )
 
 type Service struct {

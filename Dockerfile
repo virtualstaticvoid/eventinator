@@ -29,8 +29,8 @@ RUN mkdir -p /tmp/protoc \
 RUN go get github.com/golang/protobuf/protoc-gen-go
 
 # setup source directories, under $GOPATH
-RUN mkdir -p /go/src/vsv.io/eventinator
-WORKDIR /go/src/vsv.io/eventinator
+RUN mkdir -p /go/src/go.virtualstaticvoid.com/eventinator
+WORKDIR /go/src/go.virtualstaticvoid.com/eventinator
 
 # copy over sources
 COPY . .
@@ -39,7 +39,7 @@ COPY . .
 RUN cd protobuf && protoc --proto_path=. --proto_path=include --go_out=plugins=grpc:. *.proto
 
 # build sources
-RUN go install vsv.io/eventinator
+RUN go install go.virtualstaticvoid.com/eventinator
 
 ###
 # runtime stage

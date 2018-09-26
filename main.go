@@ -8,12 +8,12 @@ import (
 	"syscall"
 
 	"github.com/nats-io/go-nats-streaming"
+	"go.virtualstaticvoid.com/eventinator/config"
+	"go.virtualstaticvoid.com/eventinator/metrics"
+	"go.virtualstaticvoid.com/eventinator/protobuf"
+	"go.virtualstaticvoid.com/eventinator/service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"vsv.io/eventinator/config"
-	"vsv.io/eventinator/metrics"
-	"vsv.io/eventinator/protobuf"
-	"vsv.io/eventinator/service"
 
 	log "github.com/sirupsen/logrus"
 )

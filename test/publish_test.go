@@ -9,8 +9,8 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
-	pb "vsv.io/eventinator/protobuf"
-	test "vsv.io/eventinator/test"
+	pb "go.virtualstaticvoid.com/eventinator/protobuf"
+	test "go.virtualstaticvoid.com/eventinator/test"
 )
 
 func TestPublish(t *testing.T) {
