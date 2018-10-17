@@ -2,7 +2,7 @@
 # build stage
 ###
 
-FROM golang:1.10 as builder
+FROM golang:1.11 as builder
 
 # need unzip
 RUN apt-get -q update \
@@ -25,7 +25,7 @@ RUN mkdir -p /tmp/protoc \
  && cd /tmp \
  && rm -rf protoc
 
-# install go extensions for protoc compilter
+# install go plugin for protoc compiler
 RUN go get github.com/golang/protobuf/protoc-gen-go
 
 # setup source directories, under $GOPATH
@@ -37,6 +37,8 @@ COPY . .
 
 # compile proto files
 RUN cd protobuf && protoc --proto_path=. --proto_path=include --go_out=plugins=grpc:. *.proto
+
+ENV GO111MODULE=on
 
 # build sources
 RUN go install go.virtualstaticvoid.com/eventinator
