@@ -9,7 +9,6 @@ import (
 	"google.golang.org/grpc"
 
 	pb "go.virtualstaticvoid.com/eventinator/protobuf"
-	test "go.virtualstaticvoid.com/eventinator/test"
 )
 
 func TestSubscribe(t *testing.T) {
@@ -33,7 +32,7 @@ func TestSubscribe(t *testing.T) {
 	ctx := context.Background()
 
 	// get topic and version for this message type
-	md, _ := pb.GetMessageMetadata(&test.FeatureToggled{})
+	md, _ := pb.GetMessageMetadata(&FeatureToggled{})
 	requestId, _ := uuid.NewUUID()
 	// deliveryOption := pb.DeliveryOption_NewOnly
 	deliveryOption := pb.DeliveryOption_StartAfterLastProcessed

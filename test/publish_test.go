@@ -10,7 +10,6 @@ import (
 	"google.golang.org/grpc"
 
 	pb "go.virtualstaticvoid.com/eventinator/protobuf"
-	test "go.virtualstaticvoid.com/eventinator/test"
 )
 
 func TestPublish(t *testing.T) {
@@ -57,7 +56,7 @@ func TestPublish(t *testing.T) {
 	}()
 
 	// get topic and version for this message type
-	md, _ := pb.GetMessageMetadata(&test.FeatureToggled{})
+	md, _ := pb.GetMessageMetadata(&FeatureToggled{})
 
 	metadata := make(map[string]string)
 	metadata["foo"] = "bar"
@@ -74,7 +73,7 @@ func TestPublish(t *testing.T) {
 	for {
 
 		requestId, _ := uuid.NewUUID()
-		payload, _ := ptypes.MarshalAny(&test.FeatureToggled{
+		payload, _ := ptypes.MarshalAny(&FeatureToggled{
 			Id:      "feature-1",
 			Enabled: true,
 		})
