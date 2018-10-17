@@ -96,7 +96,7 @@ func TestPublish(t *testing.T) {
 		t.Log(req)
 
 		count++
-		if count > 9 {
+		if count > 101 {
 			t.Log("stopping...")
 			break
 		}
