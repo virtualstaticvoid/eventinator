@@ -6,6 +6,8 @@ services:
   nats:
     image: nats-streaming:0.9.2-linux
     command: -a 0.0.0.0 -p 4222 -m 8222 -m 8282 -c /etc/nats/nats.conf -sc /etc/nats/stan.conf -SDV
+    ports:
+      - "4222:4222"
     volumes:
       - "./nats.conf:/etc/nats/nats.conf"
       - "./stan.conf:/etc/nats/stan.conf"
