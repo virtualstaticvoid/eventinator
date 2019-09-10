@@ -4,35 +4,21 @@ all::
 all:: build
 .PHONY: all
 
-build:
+.PHONY: build
+build: build-certs build-protobuf
 
-	docker build -t vsv/eventinator:latest .
+	docker build --tag vsv/eventinator:latest \
+		--build-arg GO_VERSION=1.12.9 \
+		--build-arg DEBIAN_VERSION=stretch \
+		.
 
+.PHONY: build-certs
 build-certs:
 
 	$(MAKE) -C certs build
 
-PROTOBUF_PATH=protobuf
+.PHONY: build-protobuf
+build-protobuf:
 
-build-protofiles:
-
-	protoc --proto_path=$(PROTOBUF_PATH) \
-				 --proto_path=$(PROTOBUF_PATH)/include \
-				 --go_out=$(PROTOBUF_PATH) \
-				 eventinator.proto
-
-	protoc --proto_path=$(PROTOBUF_PATH) \
-				 --proto_path=$(PROTOBUF_PATH)/include \
-				 --go_out=plugins=grpc:$(PROTOBUF_PATH) \
-				 api.proto
-
-	protoc --proto_path=$(PROTOBUF_PATH) \
-				 --proto_path=$(PROTOBUF_PATH)/include \
-				 --go_out=plugins=grpc:$(PROTOBUF_PATH) \
-				 internal.proto
-
-	protoc --proto_path=test \
-				 --proto_path=$(PROTOBUF_PATH) \
-				 --proto_path=$(PROTOBUF_PATH)/include \
-				 --go_out=plugins=grpc:test \
-				 examples.proto
+	$(MAKE) -C protobuf build
+	$(MAKE) -C test build
