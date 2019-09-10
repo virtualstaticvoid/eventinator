@@ -22,3 +22,8 @@ build-protobuf:
 
 	$(MAKE) -C protobuf build
 	$(MAKE) -C test build
+
+.PHONY: exportimage
+exportimage:
+
+	docker image save vsv/eventinator:latest --output vsv-eventinator-latest.tar.gz
