@@ -2,21 +2,23 @@ package main
 
 import (
 	"fmt"
-	"net"
-	"os"
-	"os/signal"
-	"syscall"
-
-	"github.com/nats-io/go-nats-streaming"
+	"github.com/nats-io/stan.go"
+	log "github.com/sirupsen/logrus"
 	"go.virtualstaticvoid.com/eventinator/config"
 	"go.virtualstaticvoid.com/eventinator/metrics"
 	"go.virtualstaticvoid.com/eventinator/protobuf"
 	"go.virtualstaticvoid.com/eventinator/service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-
-	log "github.com/sirupsen/logrus"
+	"net"
+	"os"
+	"os/signal"
+	"syscall"
 )
+
+//go:generate protoc --proto_path protobuf --go_out=protobuf --go_opt=paths=source_relative --go-grpc_out=protobuf --go-grpc_opt=paths=source_relative api.proto
+//go:generate protoc --proto_path protobuf --go_out=protobuf --go_opt=paths=source_relative eventinator.proto
+//go:generate protoc --proto_path protobuf --go_out=protobuf --go_opt=paths=source_relative internal.proto
 
 func main() {
 
@@ -34,7 +36,7 @@ func main() {
 
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", cfg.Port))
 	if err != nil {
-		panic(err)
+		log.Panicf("Failed %v", err)
 	}
 
 	metric := metrics.NewInstrumentation(cfg.MetricsEnabled)
@@ -52,21 +54,21 @@ func main() {
 
 	var opts []grpc.ServerOption
 	if cfg.Secure {
-		creds, err := credentials.NewServerTLSFromFile(cfg.CertificateFile, cfg.CertificateKeyFile)
+		transCred, err := credentials.NewServerTLSFromFile(cfg.CertificateFile, cfg.CertificateKeyFile)
 		if err != nil {
 			log.Fatalf("Failed to generate credentials %v", err)
 		}
-		opts = []grpc.ServerOption{grpc.Creds(creds)}
+		opts = []grpc.ServerOption{grpc.Creds(transCred)}
 	}
 
 	server := grpc.NewServer(opts...)
 	protobuf.RegisterAPIServer(server, svc)
 
-	sigchan := make(chan os.Signal, 1)
-	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
-		<-sigchan
+		<-sigChan
 		log.Info("Gracefully shutting down server...")
 		server.GracefulStop() // unblocks
 	}()

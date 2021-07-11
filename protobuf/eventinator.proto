@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package eventinator.protobuf;
+package eventinator;
 
-option go_package = "protobuf";
+option go_package = "go.virtualstaticvoid.com/eventinator/protobuf";
 
 import "google/protobuf/descriptor.proto";
 

@@ -1,3 +1,5 @@
-*.tar.gz
+*.conf
 .git
-test/*
+.gitignore
+.idea
+certs

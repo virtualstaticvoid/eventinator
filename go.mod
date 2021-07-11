@@ -1,16 +1,16 @@
 module go.virtualstaticvoid.com/eventinator
 
+go 1.16
+
 require (
-	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b // indirect
-	github.com/golang/protobuf v1.3.2
-	github.com/google/uuid v1.0.0
-	github.com/nats-io/gnatsd v1.4.1 // indirect
-	github.com/nats-io/go-nats v1.6.0 // indirect
-	github.com/nats-io/go-nats-streaming v0.4.0
-	github.com/nats-io/nats-streaming-server v0.16.0 // indirect
-	github.com/prometheus/client_golang v0.9.2
-	github.com/sirupsen/logrus v1.1.1
-	golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3
-	google.golang.org/genproto v0.0.0-20181016170114-94acd270e44e // indirect
-	google.golang.org/grpc v1.13.0
+	github.com/golang/protobuf v1.5.2
+	github.com/google/uuid v1.2.0
+	github.com/nats-io/nats-server/v2 v2.3.1 // indirect
+	github.com/nats-io/nats-streaming-server v0.22.0 // indirect
+	github.com/nats-io/stan.go v0.9.0
+	github.com/prometheus/client_golang v1.11.0
+	github.com/sirupsen/logrus v1.8.1
+	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
+	google.golang.org/grpc v1.39.0
+	google.golang.org/protobuf v1.27.1
 )

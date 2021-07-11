@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package example;
+
+option go_package = "go.virtualstaticvoid.com/eventinator/example/protobuf";
+
+import "eventinator.proto";
+
+// example message for when an order is created
+// applicable in a tenant context
+message OrderCreated {
+  option (eventinator.topic) = "order.created";
+
+  string id = 1;
+  string order_reference = 2;
+}
+
+message OrderShipped {
+  option (eventinator.topic) = "order.shipped";
+  option (eventinator.version) = "1.0.1";
+
+  string id = 1;
+  string order_reference = 2;
+}

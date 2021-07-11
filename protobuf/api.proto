@@ -1,31 +1,12 @@
 syntax = "proto3";
 
-package eventinator.protobuf;
+package eventinator;
 
-option go_package = "protobuf";
+option go_package = "go.virtualstaticvoid.com/eventinator/protobuf";
 
 import "google/protobuf/any.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
-
-// represents the context of a message; in this case a system context
-message SystemContext {
-
-  // identifier of the user who initiated the message
-  string user_identifier = 1;
-
-}
-
-// represents the context of a message; in this case a tenant context
-message TenantContext {
-
-  // identifier of the user who initiated the message
-  string user_identifier = 1;
-
-  // optionally, the identifier of the tenancy to which the message applies
-  string tenant_identifier = 2;
-
-}
 
 // publish request type
 message PublishRequest {
@@ -43,11 +24,8 @@ message PublishRequest {
   // the version of the message
   string version = 3;
 
-  // context of the message; either system or tenant
-  oneof context {
-    SystemContext system_context = 4;
-    TenantContext tenant_context = 5;
-  }
+  // reserved = 4;
+  // reserved = 5;
 
   // source/origin urn
   // e.g. "urn:system-x.org.com/service-a"
@@ -83,19 +61,19 @@ message PublishResponse {
 enum DeliveryOption {
   // only new messages since subscription started
   // this is the default option
-  NewOnly                  = 0;
-  // use with care!
-  DeliverAllAvailable      = 1;
+  NewOnly = 0;
+  // use with care as delivers all messages since system epoch
+  DeliverAllAvailable = 1;
   // a specific message
-  StartAtSequence          = 2;
+  StartAtSequence = 2;
   // messages since date/time
-  StartAtTime              = 3;
+  StartAtTime = 3;
   // messages in the last 10 minutes
-  StartAtDuration          = 4;
+  StartAtDuration = 4;
   // from the last received message (1)
-  StartWithLastReceived    = 5;
+  StartWithLastReceived = 5;
   // start after last acknowledged message (durable subscription per subscriber)
-  StartAfterLastProcessed  = 6;
+  StartAfterLastProcessed = 6;
 }
 
 message SubscribeRequest {
@@ -145,11 +123,8 @@ message SubscribeResponse {
   // e.g. "1.0"
   string version = 4;
 
-  // context of the message; either system or tenant
-  oneof context {
-    SystemContext system_context = 5;
-    TenantContext tenant_context = 6;
-  }
+  // reserved = 5;
+  // reserved = 6;
 
   // source/origin urn
   // e.g. "urn:system-x.org.com/service-a"
