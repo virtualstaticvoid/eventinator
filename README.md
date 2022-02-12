@@ -5,11 +5,11 @@ for publishing and subscribing to the messages.
 
 ## Usage
 
-Build the docker image and run the service.
+Build the docker image and run the server.
 
 ```
 docker-compose build
-docker-compose up nats service
+docker-compose up nats server
 ```
 
 Run two terminals, one for publishing messages,
